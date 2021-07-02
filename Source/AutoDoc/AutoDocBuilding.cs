@@ -20,6 +20,15 @@ namespace AutoDoc
 
         public const int tickRate = 60;
 
+
+
+        //public virtual void DoPawn()
+        //{
+        //    PawnKindDef temp = new PawnKindDef{ };
+        //    temp.defName = "temp";
+        //    Pawn p = PawnGenerator.GeneratePawn(temp, Faction.OfPlayer);
+        //}
+
         public Pawn PawnContained => innerContainer.FirstOrDefault() as Pawn;
         public override void SpawnSetup(Map map, bool respawningAfterLoad)
         {
@@ -38,7 +47,7 @@ namespace AutoDoc
                 FloatMenuOption failer = new FloatMenuOption("CannotUseNoPath".Translate(), null);
                 yield return failer;
             }
-            else
+            else if (PawnContained == null) // checks if a pawn is already inside
             {
                 JobDef jobDef = JobDefOf.EnterCryptosleepCasket;
                 void MakeJob()
@@ -48,7 +57,6 @@ namespace AutoDoc
                 }
                 yield return FloatMenuUtility.DecoratePrioritizedTask(new FloatMenuOption("Enter Auto Doc", MakeJob), myPawn, this);
             }
-
         }
     }
 }

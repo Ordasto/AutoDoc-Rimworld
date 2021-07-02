@@ -31,14 +31,13 @@ namespace AutoDoc
             {
                 TendHediffs();
             }
-            List<Bill> surgeryNeeded = PawnContained.health.surgeryBills.Bills;
-            if(surgeryNeeded.Count>0)
+            if(PawnContained.health.surgeryBills.Bills.Count>0)
             {
-                
+                DoSurgery();
             }
 
         }
-
+        
         private void TendHediffs()
         {
             List<Hediff> hediffSet = PawnContained.health.hediffSet.hediffs;
@@ -50,6 +49,26 @@ namespace AutoDoc
                     hediffSet[i].Tended_NewTemp(1,1);
                     break;
                 }
+            }
+        }
+
+        private void DoSurgery()
+        {
+            List<Bill> surgeryNeeded = PawnContained.health.surgeryBills.Bills;
+            for(int i = 0; i<surgeryNeeded.Count; i++)
+            {
+
+                //List<IngredientCount> requiredIngredients = surgeryNeeded[i].recipe.ingredients;  // Makes list of required ingredients
+                foreach (IngredientCount j in surgeryNeeded[i].recipe.ingredients)
+                {
+                    Log.Message(j.ToString());
+                    
+                }
+                try
+                {
+                    surgeryNeeded[i].Notify_IterationCompleted(null, null); // Works i guess but throws errors 
+                }
+                catch { }
             }
         }
     }
