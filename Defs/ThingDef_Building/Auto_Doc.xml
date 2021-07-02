@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+	<ThingDef ParentName="BuildingBase">
+		<defName>AD_AutoDoc</defName>
+		<label>Auto Doc</label>
+		<thingClass>AutoDoc.AutoDocBuilding</thingClass>
+	    <graphicData>
+	      <texPath>Things/Building/Furniture/AutoDoc/AutoDoc</texPath>
+	      <graphicClass>Graphic_Multi</graphicClass>
+	      <shaderType>CutoutComplex</shaderType>
+	      <drawSize>(2,2)</drawSize>
+	    </graphicData>
+	    <castEdgeShadows>True</castEdgeShadows>
+	    <hasInteractionCell>true</hasInteractionCell>
+        <interactionCellOffset>(1,0,0)</interactionCellOffset>
+        <tickerType>Rare</tickerType>
+		<statBases>			
+			<MaxHitPoints>200</MaxHitPoints>
+			<WorkToBuild>3000</WorkToBuild>
+			<Mass>100</Mass>
+		    <Flammability>1.0</Flammability>
+		    <BedRestEffectiveness>1</BedRestEffectiveness>
+		    <Comfort>0.80</Comfort>
+		    <SurgerySuccessChanceFactor>1.1</SurgerySuccessChanceFactor>
+		</statBases>
+		<size>(1,2)</size>
+		<defaultPlacingRot>South</defaultPlacingRot>
+	    <costList>
+	      <Steel>100</Steel>
+	      <ComponentIndustrial>5</ComponentIndustrial>
+	    </costList>
+	    <comps>
+        <li Class="CompProperties_power">
+          <compClass>CompPowerTrader</compClass>
+          <basePowerConsumption>400</basePowerConsumption>
+        </li>
+        <li Class="CompProperties_Flickable"/>
+        <li Class="Autodoc.CompPropertiesAutoDocBuilding">
+          <compClass>AutoDoc.CompAutoDoc</compClass>
+        </li>
+	    </comps>
+	    <altitudeLayer>Building</altitudeLayer>
+	    <passability>Standable</passability>
+	    <terrainAffordanceNeeded>Heavy</terrainAffordanceNeeded>
+	    <designationCategory>Misc</designationCategory>
+	</ThingDef>
+</Defs>
+

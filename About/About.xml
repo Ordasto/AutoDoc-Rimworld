@@ -1,0 +1,10 @@
+<?xnl version = "1.0" encoding="utf-8"?>
+<ModMetaData>
+	<packageId>Ordo.Autodoc</packageId>
+	<name>AutoDoc</name>
+	<author>Ordo</author>
+	<supportedVersions>
+    	<li>1.2</li>
+  	</supportedVersions>
+	<description>Temp</description>
+</ModMetaData>
