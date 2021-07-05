@@ -49,46 +49,14 @@ namespace AutoDoc
                 yield return FloatMenuUtility.DecoratePrioritizedTask(new FloatMenuOption("Enter Auto Doc", MakeJob), myPawn, this);
             }
         }
-
-
-        // Draw Rect around autodoc to search for medical materials
-        // probably a better solution to this but meh
-        //public void DrawRect(Map map)
-        //{
-        //    IntVec3 loc = this.Position; 
-        //    CellRect testingRect = new CellRect
-        //    {
-        //        minX = loc.x-1,
-        //        minZ = loc.z-2,
-        //        Width = 3,
-        //        Height = 4
-                
-        //    };
-        //    Log.Message(loc.x.ToString());
-        //    Log.Message(testingRect.CenterCell.ToString());
-        //    foreach(var i in testingRect)
-        //    {
-        //        if (i.GetFirstItem(map) != null)
-        //        {
-        //            //Log.Message(i.GetFirstItem(map).ToString());
-
-        //            List<Thing> thingList = i.GetThingList(map);
-        //            foreach(Thing j in thingList)
-        //            {
-        //                Log.Message(j.stackCount.ToString());
-
-        //            }
-        //        }   
-        //    }
-        //}
-
+        
         public override IEnumerable<Gizmo> GetGizmos()
         {
             foreach (Gizmo g in base.GetGizmos())
             {
                 yield return g;
             }
-            yield return new Command_Action() // Todo: Add to check if surgry is in progress and if somebody is inside
+            yield return new Command_Action() // [Todo] Add to check if surgry is in progress and if somebody is inside
             {
                 defaultLabel = "Exit Auto Doc",
                 action = EjectContents 
