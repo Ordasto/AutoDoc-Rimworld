@@ -12,12 +12,10 @@ namespace AutoDoc
 {
     class CompAutoDoc : ThingComp
     {
-
         public CompPropertiesAutoDocBuilding Properties => props as CompPropertiesAutoDocBuilding;
         private AutoDocBuilding AutoDoc => parent as AutoDocBuilding;
         public Pawn PawnContained => AutoDoc.PawnContained;
         private CellRect MaterialSearch;
-
         private Map ParentMap { set; get; }
         // [INFO]
         // Ingame time:
@@ -63,43 +61,38 @@ namespace AutoDoc
             }
         }
 
+
+        // This a pretty horrible way to do this but im to dumb to figure out a better way
+        // Just looking at it makes me want to vomit
         private void DoSurgery()
         {
             List<Bill> surgeryNeeded = PawnContained.health.surgeryBills.Bills;
-            for(int i = 0; i<surgeryNeeded.Count; i++)
+            for (int i = 0; i < surgeryNeeded.Count; i++)
             {
-                //List<IngredientCount> requiredIngredients = surgeryNeeded[i].recipe.ingredients;  // Makes list of required ingredients
-
-                //foreach (IngredientCount j in surgeryNeeded[i].recipe.ingredients) { Log.Message(j.GetType().ToString()); } // Just Displays required recipe
-
+                Bill surgeryBill = surgeryNeeded[i];
                 List<Thing> MaterialsAround = CheckMat();
                 if (MaterialsAround == null) return;
                 HashSet<Thing> MaterialsRequired = new HashSet<Thing>();
-                IntVec3 loc = parent.Position;
                 foreach (Thing j in MaterialsAround)
                 {
-                    Log.Message("");
-                    Log.Message($"{surgeryNeeded[i].IsFixedOrAllowedIngredient(j)} : {j} "); // [IMPORTANT] Displays whether item is required in recipe, still need to remove the desired amount
-                    Log.Message($"{surgeryNeeded[i].recipe.IsIngredient(j.def)} : {j.def} ");                      // Then remove from materials around/required
-                    if (surgeryNeeded[i].recipe.IsIngredient(j.def))
+                    if (surgeryBill.recipe.IsIngredient(j.def))
                     {
                         MaterialsRequired.Add(j);
                     }
-                    Log.Message("");
                 }
-                if (MaterialsRequired.Count == surgeryNeeded[i].recipe.ingredients.Count)
+                if (MaterialsRequired.Count == surgeryBill.recipe.ingredients.Count)
                 {
-                    Bill temp = surgeryNeeded[i];
-                    surgeryNeeded[i].Notify_IterationCompleted(null, null);
-                    //PawnContained.health.AddHediff(surgeryNeeded[i].recipe.addsHediff);
-                    //surgeryNeeded[i].deleted = true;
-                    //PawnContained.health.surgeryBills.Bills.Remove(surgeryNeeded[i]);
+                    Bill temp = surgeryBill;
+                    try { surgeryBill.Notify_IterationCompleted(null, null); }
+                    catch { };
                     if (!PawnContained.health.surgeryBills.Bills.Contains(temp))
                     {
-                        foreach (Thing j in MaterialsRequired) j.stackCount--;
-                    }
-                    
-                    
+                        foreach (Thing j in MaterialsRequired)
+                        {
+                            if (j.stackCount > 1) j.stackCount--;
+                            else j.Destroy();
+                        }
+                    }      
                 }
             }
         }

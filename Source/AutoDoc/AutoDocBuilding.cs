@@ -15,6 +15,7 @@ namespace AutoDoc
         private CompPowerTrader powerComp;
         private CompBreakdownable breakdownable;
         public bool AutoDocActive => (powerComp?.PowerOn ?? true) && !(breakdownable?.BrokenDown ?? false);
+        public bool SurgeryInProgress { get; set; }
 
         public CompAutoDoc autoDoc;
 
@@ -23,6 +24,7 @@ namespace AutoDoc
         public Pawn PawnContained => innerContainer.FirstOrDefault() as Pawn;
         public override void SpawnSetup(Map map, bool respawningAfterLoad)
         {
+            SurgeryInProgress = false;
             base.SpawnSetup(map, respawningAfterLoad);
             powerComp = GetComp<CompPowerTrader>();
             breakdownable = GetComp<CompBreakdownable>();
@@ -56,11 +58,25 @@ namespace AutoDoc
             {
                 yield return g;
             }
-            yield return new Command_Action() // [Todo] Add to check if surgry is in progress and if somebody is inside
+            yield return ExitAutoDoc();
+        }
+        private Gizmo ExitAutoDoc()
+        {
+            Command_Action exit = new Command_Action()
             {
                 defaultLabel = "Exit Auto Doc",
-                action = EjectContents 
+                action = EjectContents,
+                defaultDesc = "Ejects the pawn inside.",
+                disabled = false
             };
+            if (SurgeryInProgress) exit.Disable("Busy");
+            else if (PawnContained == null) exit.Disable("Empty");
+
+            return exit;
+        }
+        public void SetSurgeryInProgress(bool setting)
+        {
+            SurgeryInProgress = setting;
         }
     }
 }
