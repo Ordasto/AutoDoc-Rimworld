@@ -70,20 +70,37 @@ namespace AutoDoc
             {
                 //List<IngredientCount> requiredIngredients = surgeryNeeded[i].recipe.ingredients;  // Makes list of required ingredients
 
-                //foreach (IngredientCount j in surgeryNeeded[i].recipe.ingredients) { Log.Message(j.ToString()); } // Just Displays required recipe
+                //foreach (IngredientCount j in surgeryNeeded[i].recipe.ingredients) { Log.Message(j.GetType().ToString()); } // Just Displays required recipe
 
                 List<Thing> MaterialsAround = CheckMat();
                 if (MaterialsAround == null) return;
-                List<Thing> MaterialsRequired = new List<Thing>();
+                HashSet<Thing> MaterialsRequired = new HashSet<Thing>();
                 IntVec3 loc = parent.Position;
-
                 foreach (Thing j in MaterialsAround)
                 {
-                    Log.Message($"{surgeryNeeded[0].IsFixedOrAllowedIngredient(j)} : {j} "); // [IMPORTANT] Displays whether item is required in recipe, still need to remove the desired amount
-                                                                                             // Then remove from materials around/required
+                    Log.Message("");
+                    Log.Message($"{surgeryNeeded[i].IsFixedOrAllowedIngredient(j)} : {j} "); // [IMPORTANT] Displays whether item is required in recipe, still need to remove the desired amount
+                    Log.Message($"{surgeryNeeded[i].recipe.IsIngredient(j.def)} : {j.def} ");                      // Then remove from materials around/required
+                    if (surgeryNeeded[i].recipe.IsIngredient(j.def))
+                    {
+                        MaterialsRequired.Add(j);
+                    }
+                    Log.Message("");
                 }
-
-
+                if (MaterialsRequired.Count == surgeryNeeded[i].recipe.ingredients.Count)
+                {
+                    Bill temp = surgeryNeeded[i];
+                    surgeryNeeded[i].Notify_IterationCompleted(null, null);
+                    //PawnContained.health.AddHediff(surgeryNeeded[i].recipe.addsHediff);
+                    //surgeryNeeded[i].deleted = true;
+                    //PawnContained.health.surgeryBills.Bills.Remove(surgeryNeeded[i]);
+                    if (!PawnContained.health.surgeryBills.Bills.Contains(temp))
+                    {
+                        foreach (Thing j in MaterialsRequired) j.stackCount--;
+                    }
+                    
+                    
+                }
             }
         }
 
