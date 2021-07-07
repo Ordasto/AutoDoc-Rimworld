@@ -29,6 +29,7 @@ namespace AutoDoc
             powerComp = GetComp<CompPowerTrader>();
             breakdownable = GetComp<CompBreakdownable>();
             autoDoc = GetComp<CompAutoDoc>();
+
         }
 
 
@@ -52,6 +53,7 @@ namespace AutoDoc
             }
         }
         
+
         public override IEnumerable<Gizmo> GetGizmos()
         {
             foreach (Gizmo g in base.GetGizmos())
@@ -60,7 +62,11 @@ namespace AutoDoc
             }
             yield return ExitAutoDoc();
         }
-        private Gizmo ExitAutoDoc()
+
+        // [INFO]
+        // Command_Action are the buttons you see at the bottom of the screen when a building is selected
+        // Like Deconstruct and uninstall
+        private Gizmo ExitAutoDoc() 
         {
             Command_Action exit = new Command_Action()
             {
@@ -71,12 +77,16 @@ namespace AutoDoc
             };
             if (SurgeryInProgress) exit.Disable("Busy");
             else if (PawnContained == null) exit.Disable("Empty");
-
             return exit;
         }
         public void SetSurgeryInProgress(bool setting)
         {
             SurgeryInProgress = setting;
+        }
+        public override void EjectContents()
+        {
+            base.EjectContents();
+            autoDoc.surgeryBill = null;
         }
     }
 }
