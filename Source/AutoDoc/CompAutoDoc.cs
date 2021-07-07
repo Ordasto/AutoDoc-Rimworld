@@ -161,7 +161,8 @@ namespace AutoDoc
             if (surgeryBill == null) return "No Task";
             StringBuilder output = new StringBuilder();
             output.Append($"Current Bill: {surgeryBill.Label}\n");
-            if (timer > 0) output.Append($"Time Left: { (int)timer/10 }");
+            if (timer > 0) output.Append($"Time Left: { (int)timer / 10 }");
+            else output.Append($"Time Left: None");
             output.Append("\nRequires: ");
             foreach (IngredientCount i in surgeryBill.recipe.ingredients) output.Append( i.ToString());
             return $"{output}";
