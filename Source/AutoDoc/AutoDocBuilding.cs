@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using UnityEngine;
 using RimWorld;
 using Verse;
 using Verse.AI;
-using Verse.Sound;
 
 namespace AutoDoc
 {
@@ -18,7 +15,6 @@ namespace AutoDoc
         public bool SurgeryInProgress { get; set; }
 
         public CompAutoDoc autoDoc;
-
         public const int tickRate = 60;
 
         public Pawn PawnContained => innerContainer.FirstOrDefault() as Pawn;
@@ -73,7 +69,8 @@ namespace AutoDoc
                 defaultLabel = "Exit Auto Doc",
                 action = EjectContents,
                 defaultDesc = "Ejects the pawn inside.",
-                disabled = false
+                disabled = false,
+                icon = ContentFinder<Texture2D>.Get("Icons/ExitAutoDoc")
             };
             if (SurgeryInProgress) exit.Disable("Busy");
             else if (PawnContained == null) exit.Disable("Empty");

@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Text;
-using UnityEngine;
 using RimWorld;
 using Verse;
-using Verse.AI;
-using Verse.Sound;
 
 namespace AutoDoc
 {
@@ -18,7 +13,6 @@ namespace AutoDoc
         private CellRect MaterialSearch;
         private Map ParentMap { set; get; }
         private float timer = -1;
-        private float maxTimer;
         public Bill surgeryBill;
         // [INFO]
         // Ingame time:
@@ -34,9 +28,7 @@ namespace AutoDoc
 
         public override void CompTick() // might move to rare if it impacts performence heavily
         {
-            var watch = new System.Diagnostics.Stopwatch();
             base.CompTick();
-            watch.Start();
             if (!AutoDoc.AutoDocActive || PawnContained == null)
             {
                 return;
@@ -58,8 +50,6 @@ namespace AutoDoc
                 AutoDoc.SetSurgeryInProgress(false);
                 timer = -1;
             }
-            watch.Stop();
-            Log.Message($"Mod Tick: {watch.ElapsedTicks}");
         }
         
         private void TendHediffs()
@@ -79,7 +69,7 @@ namespace AutoDoc
 
         // This is a pretty horrible way to do this but im too dumb to figure out a better way
         // Just looking at it makes me want to vomit
-        private void DoSurgery()
+        private void DoSurgery() // <--- most disgusting thing i've ever written, there has to be a better way 
         {
             List<Bill> surgeryNeeded = PawnContained.health.surgeryBills.Bills;
             for (int i = 0; i < surgeryNeeded.Count; i++)
@@ -88,14 +78,16 @@ namespace AutoDoc
                 List<Thing> MaterialsAround = CheckMat();
                 if (MaterialsAround == null) return;
                 HashSet<Thing> MaterialsRequired = new HashSet<Thing>();
+                HashSet<ThingDef> MaterialsRequiredDef = new HashSet<ThingDef>();
                 foreach (Thing j in MaterialsAround)
                 {
-                    if (surgeryBill.recipe.IsIngredient(j.def))
+                    if (surgeryBill.recipe.IsIngredient(j.def) && !MaterialsRequiredDef.Contains(j.def))
                     {
                         MaterialsRequired.Add(j);
+                        MaterialsRequiredDef.Add(j.def);
                     }
                 }
-                if (MaterialsRequired.Count == surgeryBill.recipe.ingredients.Count)
+                if (MaterialsRequired.Count >= surgeryBill.recipe.ingredients.Count)
                 {
                     Bill temp = surgeryBill;
                     try { surgeryBill.Notify_IterationCompleted(null, null); }
@@ -103,8 +95,7 @@ namespace AutoDoc
                     if (!PawnContained.health.surgeryBills.Bills.Contains(temp)) 
                     {
                         AutoDoc.SetSurgeryInProgress(true);
-                        timer = surgeryBill.recipe.workAmount / 2;
-                        maxTimer = surgeryBill.recipe.workAmount / 2;
+                        timer = surgeryBill.recipe.workAmount;
                         foreach (Thing j in MaterialsRequired)
                         {
                             if (j.stackCount > 1) j.stackCount--;
