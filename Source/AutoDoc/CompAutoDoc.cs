@@ -160,8 +160,9 @@ namespace AutoDoc
         {
             if (surgeryBill == null) return "No Task";
             StringBuilder output = new StringBuilder();
-            output.Append($"Current Bill: {surgeryBill.Label}\nRequires: {output}");
+            output.Append($"Current Bill: {surgeryBill.Label}\n");
             if (timer > 0) output.Append($"Time Left: { (int)timer/10 }");
+            output.Append("\nRequires: ");
             foreach (IngredientCount i in surgeryBill.recipe.ingredients) output.Append( i.ToString());
             return $"{output}";
 
