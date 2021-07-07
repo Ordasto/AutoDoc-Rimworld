@@ -1,10 +1,15 @@
 <?xnl version = "1.0" encoding="utf-8"?>
 <ModMetaData>
 	<packageId>Ordo.Autodoc</packageId>
-	<name>AutoDoc</name>
+	<name>Auto Doc</name>
 	<author>Ordo</author>
 	<supportedVersions>
     	<li>1.2</li>
   	</supportedVersions>
-	<description>Temp</description>
+	<description>
+Adds the Auto Doc/Automatic Doctor
+Tends to colonists inside and operates if the required materials are adjacent.
+
+This mod is intended for solo character playthroughs that still want Bionics 
+	</description>
 </ModMetaData>

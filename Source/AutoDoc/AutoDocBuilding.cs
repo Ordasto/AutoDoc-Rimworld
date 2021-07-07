@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using UnityEngine;
 using RimWorld;
 using Verse;
 using Verse.AI;
-using Verse.Sound;
 
 namespace AutoDoc
 {
@@ -18,7 +15,6 @@ namespace AutoDoc
         public bool SurgeryInProgress { get; set; }
 
         public CompAutoDoc autoDoc;
-
         public const int tickRate = 60;
 
         public Pawn PawnContained => innerContainer.FirstOrDefault() as Pawn;
@@ -29,6 +25,7 @@ namespace AutoDoc
             powerComp = GetComp<CompPowerTrader>();
             breakdownable = GetComp<CompBreakdownable>();
             autoDoc = GetComp<CompAutoDoc>();
+
         }
 
 
@@ -52,6 +49,7 @@ namespace AutoDoc
             }
         }
         
+
         public override IEnumerable<Gizmo> GetGizmos()
         {
             foreach (Gizmo g in base.GetGizmos())
@@ -60,23 +58,32 @@ namespace AutoDoc
             }
             yield return ExitAutoDoc();
         }
-        private Gizmo ExitAutoDoc()
+
+        // [INFO]
+        // Command_Action are the buttons you see at the bottom of the screen when a building is selected
+        // Like Deconstruct and uninstall
+        private Gizmo ExitAutoDoc() 
         {
             Command_Action exit = new Command_Action()
             {
                 defaultLabel = "Exit Auto Doc",
                 action = EjectContents,
                 defaultDesc = "Ejects the pawn inside.",
-                disabled = false
+                disabled = false,
+                icon = ContentFinder<Texture2D>.Get("Icons/ExitAutoDoc")
             };
             if (SurgeryInProgress) exit.Disable("Busy");
             else if (PawnContained == null) exit.Disable("Empty");
-
             return exit;
         }
         public void SetSurgeryInProgress(bool setting)
         {
             SurgeryInProgress = setting;
+        }
+        public override void EjectContents()
+        {
+            base.EjectContents();
+            autoDoc.surgeryBill = null;
         }
     }
 }

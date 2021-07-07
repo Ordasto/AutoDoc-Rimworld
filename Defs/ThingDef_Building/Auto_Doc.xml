@@ -6,28 +6,29 @@
 		<thingClass>AutoDoc.AutoDocBuilding</thingClass>
 	    <graphicData>
 	      <texPath>Things/Building/Furniture/AutoDoc/AutoDoc</texPath>
-	      <graphicClass>Graphic_Multi</graphicClass>
-	      <shaderType>CutoutComplex</shaderType>
-	      <drawSize>(2,2)</drawSize>
+            <graphicClass>Graphic_Multi</graphicClass>
+            <drawSize>(1,2)</drawSize>
+            <shadowData>
+                <volume>(0.83, 0.3, 1.7)</volume>
+            </shadowData>
 	    </graphicData>
 	    <castEdgeShadows>True</castEdgeShadows>
 	    <hasInteractionCell>true</hasInteractionCell>
         <interactionCellOffset>(1,0,0)</interactionCellOffset>
-        <tickerType>Rare</tickerType>
+        <tickerType>Normal</tickerType>
 		<statBases>			
 			<MaxHitPoints>200</MaxHitPoints>
 			<WorkToBuild>3000</WorkToBuild>
 			<Mass>100</Mass>
 		    <Flammability>1.0</Flammability>
-		    <BedRestEffectiveness>1</BedRestEffectiveness>
-		    <Comfort>0.80</Comfort>
-		    <SurgerySuccessChanceFactor>1.1</SurgerySuccessChanceFactor>
 		</statBases>
 		<size>(1,2)</size>
 		<defaultPlacingRot>South</defaultPlacingRot>
 	    <costList>
 	      <Steel>100</Steel>
+	      <Silver>100</Silver>
 	      <ComponentIndustrial>5</ComponentIndustrial>
+	      <ComponentSpacer>5</ComponentSpacer>
 	    </costList>
 	    <comps>
         <li Class="CompProperties_power">
