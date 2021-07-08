@@ -47,6 +47,7 @@ namespace AutoDoc
                 }
                 yield return FloatMenuUtility.DecoratePrioritizedTask(new FloatMenuOption("Enter Auto Doc", MakeJob), myPawn, this);
             }
+            yield break;
         }
         
 
