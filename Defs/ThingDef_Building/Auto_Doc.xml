@@ -3,6 +3,7 @@
 	<ThingDef ParentName="BuildingBase">
 		<defName>AD_AutoDoc</defName>
 		<label>Auto Doc</label>
+		<description>The Auto Doc capable of teating wounds and completing surgeries</description> 
 		<thingClass>AutoDoc.AutoDocBuilding</thingClass>
 	    <graphicData>
 	      <texPath>Things/Building/Furniture/AutoDoc/AutoDoc</texPath>
@@ -13,7 +14,14 @@
 	    <castEdgeShadows>True</castEdgeShadows>
 	    <hasInteractionCell>true</hasInteractionCell>
         <interactionCellOffset>(1,0,0)</interactionCellOffset>
+<<<<<<< Updated upstream
         <tickerType>Rare</tickerType>
+=======
+        <tickerType>Normal</tickerType>
+        <researchPrerequisites>
+            <li>AutoDoc</li>
+        </researchPrerequisites>
+>>>>>>> Stashed changes
 		<statBases>			
 			<MaxHitPoints>200</MaxHitPoints>
 			<WorkToBuild>3000</WorkToBuild>

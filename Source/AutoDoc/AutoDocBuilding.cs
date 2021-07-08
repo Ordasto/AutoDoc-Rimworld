@@ -29,13 +29,12 @@ namespace AutoDoc
             autoDoc = GetComp<CompAutoDoc>();
         }
 
-
-
         public override IEnumerable<FloatMenuOption> GetFloatMenuOptions(Pawn myPawn)
         {
-            if (!myPawn.CanReach(this, PathEndMode.InteractionCell, Danger.Deadly))
+            if (PawnContained != null) yield break;
+            else if (!myPawn.CanReach(this, PathEndMode.InteractionCell, Danger.Deadly, false, false, TraverseMode.ByPawn))
             {
-                FloatMenuOption failer = new FloatMenuOption("CannotUseNoPath".Translate(), null);
+                var failer = new FloatMenuOption("CannotUseNopath".Translate(), null);
                 yield return failer;
             }
             else if (PawnContained == null) // checks if a pawn is already inside
@@ -48,8 +47,10 @@ namespace AutoDoc
                 }
                 yield return FloatMenuUtility.DecoratePrioritizedTask(new FloatMenuOption("Enter Auto Doc", MakeJob), myPawn, this);
             }
+            yield break;
         }
 
+<<<<<<< Updated upstream
 
         // Draw Rect around autodoc to search for medical materials
         // probably a better solution to this but meh
@@ -81,6 +82,8 @@ namespace AutoDoc
         //        }   
         //    }
         //}
+=======
+>>>>>>> Stashed changes
 
         public override IEnumerable<Gizmo> GetGizmos()
         {
