@@ -60,7 +60,7 @@ namespace AutoDoc
                 if (hediffSet[i].TendableNow())
                 {
                     Log.Message(hediffSet[i].Label);
-                    hediffSet[i].Tended_NewTemp(1,1);
+                    hediffSet[i].Tended(0.8,1);
                     break;
                 }
             }
