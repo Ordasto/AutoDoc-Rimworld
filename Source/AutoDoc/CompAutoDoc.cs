@@ -26,7 +26,7 @@ namespace AutoDoc
             DrawRect();
         }
 
-        public override void CompTick() // might move to rare if it impacts performence heavily
+        public override void CompTick()
         {
             base.CompTick();
             if (!AutoDoc.AutoDocActive || PawnContained == null)
@@ -37,21 +37,21 @@ namespace AutoDoc
             {
                 TendHediffs();
             }
-            if(PawnContained.health.surgeryBills.Bills.Count>0)
-            {
-                DoSurgery();
-            }
             if (timer > 0)
             {
                 timer -= 1;
             }
-            if (timer<=0)
+            if (timer <= 0)
             {
                 AutoDoc.SetSurgeryInProgress(false);
                 timer = -1;
             }
+            if (PawnContained.health.surgeryBills.Bills.Count > 0 && timer == -1)
+            {
+                DoSurgery();
+            }
         }
-        
+
         private void TendHediffs()
         {
             List<Hediff> hediffSet = PawnContained.health.hediffSet.hediffs;
@@ -59,8 +59,7 @@ namespace AutoDoc
             {
                 if (hediffSet[i].TendableNow())
                 {
-                    Log.Message(hediffSet[i].Label);
-                    hediffSet[i].Tended(0.8,1);
+                    hediffSet[i].Tended(0.8f, 1);
                     break;
                 }
             }
@@ -72,6 +71,7 @@ namespace AutoDoc
         private void DoSurgery() // <--- most disgusting thing i've ever written, there has to be a better way 
         {
             List<Bill> surgeryNeeded = PawnContained.health.surgeryBills.Bills;
+
             for (int i = 0; i < surgeryNeeded.Count; i++)
             {
                 surgeryBill = surgeryNeeded[i];
@@ -90,9 +90,13 @@ namespace AutoDoc
                 if (MaterialsRequired.Count >= surgeryBill.recipe.ingredients.Count)
                 {
                     Bill temp = surgeryBill;
-                    try { surgeryBill.Notify_IterationCompleted(null, null); }
-                    catch { };
-                    if (!PawnContained.health.surgeryBills.Bills.Contains(temp)) 
+                    try
+                    {
+                        surgeryBill.Notify_IterationCompleted(null, null);
+                    }
+                    catch { }
+
+                    if (!PawnContained.health.surgeryBills.Bills.Contains(temp))
                     {
                         AutoDoc.SetSurgeryInProgress(true);
                         timer = surgeryBill.recipe.workAmount;
@@ -101,7 +105,8 @@ namespace AutoDoc
                             if (j.stackCount > 1) j.stackCount--;
                             else j.Destroy();
                         }
-                    }      
+                    }
+                    break;
                 }
             }
         }
@@ -112,24 +117,13 @@ namespace AutoDoc
         // parent.rotation south = 0, 1 = west, 2 = north, 3 = east
         private void DrawRect()
         {
-
-            int width = 3;
-            int height = 4;
-            int xm = 1;
-            int zm = 2;
             IntVec3 loc = parent.Position;
 
-            // [SEMI-IMPORTANT]
-            // Two Choices: 1:Figure out good way to rotate cell with Building
-            //              2:Make AutDoc more square or bigger
+            int[] dimensions = DeterDimensions();
+            loc.x += dimensions[2];
+            loc.z += dimensions[3];
+            MaterialSearch = CellRect.CenteredOn(loc, dimensions[0], dimensions[1]);
 
-            MaterialSearch = new CellRect
-            {
-                minX = loc.x - xm,
-                minZ = loc.z - zm,
-                Width = width,
-                Height = height
-            };
             MaterialSearch.DebugDraw();
         }
 
@@ -153,19 +147,29 @@ namespace AutoDoc
         public override void PostExposeData()
         {
             base.PostExposeData();
-
         }
 
-        public override string CompInspectStringExtra()
+        public override string CompInspectStringExtra() // It sure does do a thing 
         {
             if (surgeryBill == null) return "No Task";
             StringBuilder output = new StringBuilder();
             output.Append($"Current Bill: {surgeryBill.Label}\n");
-            if (timer > 0) output.Append($"Time Left: { (int)timer/10 }");
+            if (timer > 0) output.Append($"Time Left: { (int)timer / 10 }");
+            else output.Append("Done");
             output.Append("\nRequires: ");
-            foreach (IngredientCount i in surgeryBill.recipe.ingredients) output.Append( i.ToString());
+            foreach (IngredientCount i in surgeryBill.recipe.ingredients) output.Append(i.ToString());
             return $"{output}";
+        }
 
+        private int[] DeterDimensions()
+        {
+            // parent.rotation south = 0, 1 = west, 2 = north, 3 = east
+            // int[] { width, height, xModifier, zModifier }
+            string rot = parent.Rotation.ToString();
+            if (rot == "0") return new int[] { 3, 4, 0, 1 };
+            else if (rot == "1") return new int[] { 4, 3, 1, 0 };
+            else if (rot == "2") return new int[] { 3, 4, 0, 0 };
+            else return new int[] { 4, 3, 0, 0 };
         }
     }
 }
